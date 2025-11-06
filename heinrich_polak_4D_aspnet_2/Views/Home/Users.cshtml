@@ -13,6 +13,7 @@
             <th>ID</th>
             <th>Username</th>
             <th>Email</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -21,11 +22,15 @@
             <tr>
                 <td>@user.Id</td>
                 <td>
-                    <a href ="@Url.Action("userDetail", "Home", new { userPublicId = user.PublicId })">
-                    @user.Name
+                    <a href="@Url.Action("userDetail", "Home", new { userPublicId = user.PublicId })">
+                        @user.Name
                     </a>
                 </td>
                 <td>@user.Email</td>
+                <td>
+                    <a asp-controller="Home" asp-action="DeleteUser" asp-route-PublicId="@user.PublicId"
+                       class="btn btn-danger btn-sm">Delete</a>
+                </td>
             </tr>
         }
     </tbody>

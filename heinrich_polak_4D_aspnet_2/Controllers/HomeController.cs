@@ -84,7 +84,8 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
         [HttpGet]
         public IActionResult DeleteUser(Guid PublicId)
         {
-            return View(new DeleteUserModel());
+            var model = new DeleteUserModel() { UserPublicId = PublicId };
+            return View(model);
         }
 
         [HttpPost]
@@ -94,7 +95,6 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
 
             if (user != null)
             {
-                user.Email = deleteModel.Email;
                 _context.Users.Remove(user);
                 _context.SaveChanges();
             }
