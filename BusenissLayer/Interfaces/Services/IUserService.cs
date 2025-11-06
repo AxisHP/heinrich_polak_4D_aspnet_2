@@ -10,7 +10,7 @@ namespace BusinessLayer.Interfaces.Services
     public interface IUserService
     {
         Task<List<UserDTO>> GetAllAsync();
-        Task<UserDTO> GetByPublicIdAsync();
+        Task<UserDTO> GetByPublicIdAsync(Guid publicId);
         Task<bool> CreateAsync(UserDTO model);
         Task<bool> UpdateAsync(UserDTO model);
         Task<bool> DeleteAsync(Guid publicId);

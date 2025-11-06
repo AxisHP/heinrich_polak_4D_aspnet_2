@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using heinrich_polak_4D_aspnet_2.Models;
 using UserApp.DataLayer;
 using UserApp.DataLayer.Entities;
+using BusinessLayer.Services;
+using BusinessLayer.Interfaces.Services;
 
 namespace heinrich_polak_4D_aspnet_2.Controllers
 {
@@ -10,12 +12,14 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly AppDbContext _context;
+        private readonly IUserService _userService;
 
-        public HomeController(ILogger<HomeController> logger, AppDbContext context)
+        public HomeController(ILogger<HomeController> logger, AppDbContext context, IUserService userService)
         {
-            UserEntity user = new UserEntity();
+            // UserEntity user = new UserEntity();
             _logger = logger;
             _context = context;
+            _userService = userService;
         }
 
         public IActionResult userDetail(Guid userPublicid)
@@ -36,9 +40,8 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
         [HttpGet]
         public IActionResult CreateUser()
         {
-            var user = new UserEntity();
-
-            return View(new CreateUserModel());
+            var model = new CreateUserModel();
+            return View(model);
         }
 
 

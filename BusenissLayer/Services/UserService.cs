@@ -21,12 +21,27 @@ namespace BusinessLayer.Services
 
         public async Task<bool> CreateAsync(UserDTO model)
         {
-            throw new NotImplementedException();
+            var userEntity = new UserApp.DataLayer.Entities.UserEntity
+            {
+                PublicId = model.PublicId,
+                Name = model.Name,
+                Email = model.Email
+            };
+
+            _context.Users.Add(userEntity);
+            _context.SaveChanges();
+
+            return true;
         }
 
         public async Task<bool> DeleteAsync(Guid publicId)
         {
-            throw new NotImplementedException();
+            var userEntity = await _context.Users.FirstOrDefaultAsync(u => u.PublicId == publicId);
+            if (userEntity == null) return false;
+
+            _context.Users.Remove(userEntity);
+
+            return true;
         }
 
         public async Task<List<UserDTO>> GetAllAsync()
@@ -47,14 +62,28 @@ namespace BusinessLayer.Services
             return userDTOList;
         }
 
-        public async Task<UserDTO> GetByPublicIdAsync()
+        public async Task<UserDTO> GetByPublicIdAsync(Guid userPublicId)
         {
-            throw new NotImplementedException();
+            var userEntity = await _context.Users.FirstOrDefaultAsync(u => u.PublicId == userPublicId);
+
+            if (userEntity == null) return null;
+
+            return new UserDTO
+            {
+                PublicId = userEntity.PublicId,
+                Name = userEntity.Name,
+                Email = userEntity.Email
+            };
         }
 
         public async Task<bool> UpdateAsync(UserDTO model)
         {
-            throw new NotImplementedException();
+            var userEntity = await _context.Users.FirstOrDefaultAsync(u => u.PublicId == model.PublicId);
+            if (userEntity == null) return false;
+            userEntity.Name = model.Name;
+            userEntity.Email = model.Email;
+            _context.Users.Update(userEntity);
+            return true;
         }
     }
 }
