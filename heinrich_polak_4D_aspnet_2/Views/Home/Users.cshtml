@@ -1,0 +1,32 @@
+﻿@using UserApp.DataLayer.Entities
+@model List<UserEntity>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h1>Users</h1>
+<a class="btn btn-primary" asp-controller="Home" asp-action="CreateUser">Create New User</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>
+                    <a href ="@Url.Action("userDetail", "Home", new { userPublicId = user.PublicId })">
+                    @user.Name
+                    </a>
+                </td>
+                <td>@user.Email</td>
+            </tr>
+        }
+    </tbody>
+</table>
