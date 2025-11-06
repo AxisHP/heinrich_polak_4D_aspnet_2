@@ -16,6 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\BusenissLayer\BusinessLayer.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
     <ProjectReference Include="..\UserApp.DataLayer\UserApp.DataLayer.csproj" />
   </ItemGroup>
 

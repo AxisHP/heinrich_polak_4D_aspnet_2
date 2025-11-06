@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "heinrich_polak_4D_aspnet_2"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserApp.DataLayer", "UserApp.DataLayer\UserApp.DataLayer.csproj", "{5A9BAEDA-13C9-40F8-B344-0F2F5424A4FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLayer", "BusenissLayer\BusinessLayer.csproj", "{3824391E-1FC6-4DC4-ABE5-01A1722F93B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{C1F477BC-617D-46BA-A68D-42443B3AD758}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +25,19 @@ Global
 		{5A9BAEDA-13C9-40F8-B344-0F2F5424A4FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A9BAEDA-13C9-40F8-B344-0F2F5424A4FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A9BAEDA-13C9-40F8-B344-0F2F5424A4FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3824391E-1FC6-4DC4-ABE5-01A1722F93B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3824391E-1FC6-4DC4-ABE5-01A1722F93B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3824391E-1FC6-4DC4-ABE5-01A1722F93B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3824391E-1FC6-4DC4-ABE5-01A1722F93B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1F477BC-617D-46BA-A68D-42443B3AD758}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1F477BC-617D-46BA-A68D-42443B3AD758}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1F477BC-617D-46BA-A68D-42443B3AD758}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1F477BC-617D-46BA-A68D-42443B3AD758}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9D952F4B-EFA2-4BBB-8244-A5DBC6E9FCBE}
 	EndGlobalSection
 EndGlobal
