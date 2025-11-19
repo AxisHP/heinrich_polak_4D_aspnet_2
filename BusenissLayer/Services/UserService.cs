@@ -23,13 +23,13 @@ namespace BusinessLayer.Services
         {
             var userEntity = new UserApp.DataLayer.Entities.UserEntity
             {
-                PublicId = model.PublicId,
+                PublicId = model.PublicId == Guid.Empty ? Guid.NewGuid() : model.PublicId,
                 Name = model.Name,
                 Email = model.Email
             };
 
             _context.Users.Add(userEntity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return true;
         }
@@ -40,6 +40,7 @@ namespace BusinessLayer.Services
             if (userEntity == null) return false;
 
             _context.Users.Remove(userEntity);
+            await _context.SaveChangesAsync();
 
             return true;
         }
@@ -80,9 +81,12 @@ namespace BusinessLayer.Services
         {
             var userEntity = await _context.Users.FirstOrDefaultAsync(u => u.PublicId == model.PublicId);
             if (userEntity == null) return false;
+            
             userEntity.Name = model.Name;
             userEntity.Email = model.Email;
             _context.Users.Update(userEntity);
+            await _context.SaveChangesAsync();
+            
             return true;
         }
     }

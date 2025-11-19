@@ -5,6 +5,7 @@ using UserApp.DataLayer;
 using UserApp.DataLayer.Entities;
 using BusinessLayer.Services;
 using BusinessLayer.Interfaces.Services;
+using Common.DTO;
 
 namespace heinrich_polak_4D_aspnet_2.Controllers
 {
@@ -16,101 +17,118 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
 
         public HomeController(ILogger<HomeController> logger, AppDbContext context, IUserService userService)
         {
-            // UserEntity user = new UserEntity();
             _logger = logger;
             _context = context;
             _userService = userService;
         }
 
-        public IActionResult userDetail(Guid userPublicid)
+        public async Task<IActionResult> UserList()
         {
-            var user = _context.Users
-                                .FirstOrDefault(u => u.PublicId == userPublicid);
+            var dtos = await _userService.GetAllAsync();
+            var entities = dtos.Select(d => new UserEntity
+            {
+                PublicId = d.PublicId,
+                Name = d.Name,
+                Email = d.Email
+            }).ToList();
 
-            return View(user);
+            return View(entities);
         }
-        public IActionResult Users()
 
+        public async Task<IActionResult> userDetail(Guid userPublicid)
         {
-            var userList = _context.Users.ToList();
-            return View(userList);
+            var dto = await _userService.GetByPublicIdAsync(userPublicid);
+            if (dto is null) return NotFound();
 
+            var entity = new UserEntity
+            {
+                PublicId = dto.PublicId,
+                Name = dto.Name,
+                Email = dto.Email
+            };
+
+            return View(entity);
+        }
+
+        public async Task<IActionResult> Users()
+        {
+            var dtos = await _userService.GetAllAsync();
+            return View(dtos);
         }
 
         [HttpGet]
         public IActionResult CreateUser()
         {
-            var model = new CreateUserModel();
-            return View(model);
+            return View(new CreateUserModel());
         }
 
-
         [HttpPost]
-        public IActionResult CreateUser(CreateUserModel user)
+        public async Task<IActionResult> CreateUser(CreateUserModel user)
         {
-            var entity = new UserEntity()
+            var dto = new UserDTO
             {
                 Name = user.Username,
                 Email = user.Email,
                 PublicId = Guid.NewGuid()
             };
 
-            _context.Users.Add(entity);
-            _context.SaveChanges();
-            return RedirectToAction("Users");
+            await _userService.CreateAsync(dto);
+            return RedirectToAction(nameof(Users));
         }
-
 
         [HttpGet]
         public IActionResult UpdateUser(Guid PublicId)
         {
-            var model = new UpdateUserModel() { UserPublicId = PublicId };
+            var model = new UpdateUserModel { UserPublicId = PublicId };
             return View(model);
         }
 
-
         [HttpPost]
-        public IActionResult UpdateUser(UpdateUserModel updateModel)
+        public async Task<IActionResult> UpdateUser(UpdateUserModel updateModel)
         {
-            var user = _context.Users.FirstOrDefault(u => u.PublicId == updateModel.UserPublicId);
-
-            if (user != null)
+            // Get the current user data to preserve the Name field
+            var currentUser = await _userService.GetByPublicIdAsync(updateModel.UserPublicId);
+            if (currentUser == null)
             {
-                user.Email = updateModel.Email;
-                _context.Users.Update(user);
-                _context.SaveChanges();
+                return NotFound();
             }
 
-            return RedirectToAction("Users");
+            var dto = new UserDTO
+            {
+                PublicId = updateModel.UserPublicId,
+                Name = currentUser.Name, // Preserve existing name
+                Email = updateModel.Email
+            };
+
+            await _userService.UpdateAsync(dto);
+            return RedirectToAction(nameof(Users));
         }
 
         [HttpGet]
         public IActionResult DeleteUser(Guid PublicId)
         {
-            var model = new DeleteUserModel() { UserPublicId = PublicId };
+            var model = new DeleteUserModel { UserPublicId = PublicId };
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult DeleteUser(DeleteUserModel deleteModel)
+        public async Task<IActionResult> DeleteUser(DeleteUserModel deleteModel)
         {
-            var user = _context.Users.FirstOrDefault(u => u.PublicId == deleteModel.UserPublicId);
-
-            if (user != null)
-            {
-                _context.Users.Remove(user);
-                _context.SaveChanges();
-            }
-
-            return RedirectToAction("Users");
+            await _userService.DeleteAsync(deleteModel.UserPublicId);
+            return RedirectToAction(nameof(Users));
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var db = new AppDbContext();
-            var users = db.Users.ToList();
+            var dtos = await _userService.GetAllAsync();
+            var entities = dtos.Select(d => new UserEntity
+            {
+                PublicId = d.PublicId,
+                Name = d.Name,
+                Email = d.Email
+            }).ToList();
 
-            return View(users);
+            return View(entities);
         }
 
         public IActionResult Privacy()
@@ -121,7 +139,10 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
         }
     }
 }
