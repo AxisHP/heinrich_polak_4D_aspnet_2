@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces.Services;
+﻿using BusinessLayer.Interfaces.Repository;
+using BusinessLayer.Interfaces.Services;
 using Common.DTO;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,11 +13,11 @@ namespace BusinessLayer.Services
 {
     public class UserService : IUserService
     {
-        private readonly AppDbContext _context;
+        private readonly IUserRepository _userRepository;
 
-        public UserService(AppDbContext context)
+        public UserService(IUserRepository userRepository)
         {
-            _context = context;
+            _userRepository = userRepository;
         }
 
         public async Task<bool> CreateAsync(UserDTO model)
@@ -28,26 +29,49 @@ namespace BusinessLayer.Services
                 Email = model.Email
             };
 
-            _context.Users.Add(userEntity);
-            await _context.SaveChangesAsync();
+            await _userRepository.CreateAsync(userEntity);
+            await _userRepository.SaveChangesAsync();
 
             return true;
         }
 
         public async Task<bool> DeleteAsync(Guid publicId)
         {
-            var userEntity = await _context.Users.FirstOrDefaultAsync(u => u.PublicId == publicId);
+            var userEntity = await _userRepository.GetByPublicIdAsync(publicId);
             if (userEntity == null) return false;
 
-            _context.Users.Remove(userEntity);
-            await _context.SaveChangesAsync();
+            _userRepository.Delete(userEntity);
+            await _userRepository.SaveChangesAsync();
 
+            return true;
+        }
+
+        public async Task<bool> DeleteRangeAsync(List<Guid> userPublicIds)
+        {
+            if (userPublicIds == null || userPublicIds.Count == 0) return false;
+            
+            var userEntities = new List<UserApp.DataLayer.Entities.UserEntity>();
+            foreach (var publicId in userPublicIds)
+            {
+                var userEntity = await _userRepository.GetByPublicIdAsync(publicId);
+                if (userEntity != null)
+                {
+                    userEntities.Add(userEntity);
+                }
+            }
+            
+            if (userEntities.Count > 0)
+            {
+                _userRepository.DeleteRange(userEntities);
+                await _userRepository.SaveChangesAsync();
+            }
+            
             return true;
         }
 
         public async Task<List<UserDTO>> GetAllAsync()
         {
-            var userList = await _context.Users.ToListAsync();
+            var userList = await _userRepository.GetAllAsync();
             var userDTOList = new List<UserDTO>();
 
             foreach (var user in userList)
@@ -65,7 +89,7 @@ namespace BusinessLayer.Services
 
         public async Task<UserDTO> GetByPublicIdAsync(Guid userPublicId)
         {
-            var userEntity = await _context.Users.FirstOrDefaultAsync(u => u.PublicId == userPublicId);
+            var userEntity = await _userRepository.GetByPublicIdAsync(userPublicId);
 
             if (userEntity == null) return null;
 
@@ -79,13 +103,13 @@ namespace BusinessLayer.Services
 
         public async Task<bool> UpdateAsync(UserDTO model)
         {
-            var userEntity = await _context.Users.FirstOrDefaultAsync(u => u.PublicId == model.PublicId);
+            var userEntity = await _userRepository.GetByPublicIdAsync(model.PublicId);
             if (userEntity == null) return false;
             
             userEntity.Name = model.Name;
             userEntity.Email = model.Email;
-            _context.Users.Update(userEntity);
-            await _context.SaveChangesAsync();
+            _userRepository.Update(userEntity);
+            await _userRepository.SaveChangesAsync();
             
             return true;
         }

@@ -11,9 +11,4 @@
     <ProjectReference Include="..\UserApp.DataLayer\UserApp.DataLayer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\Repository\" />
-    <Folder Include="Repository\" />
-  </ItemGroup>
-
 </Project>

@@ -7,9 +7,16 @@
 
 <h1>Users</h1>
 <a class="btn btn-primary" asp-controller="Home" asp-action="CreateUser">Create New User</a>
+<button type="button" class="btn btn-danger" onclick="deleteSelectedUsers()">Delete Selected Users</button>
+
+<form id="deleteSelectedForm" method="post" action="@Url.Action("DeleteRangeUser", "Home")" style="display: none;">
+    <input type="hidden" id="selectedUserIds" name="selectedUserIds" />
+</form>
+
 <table class="table">
     <thead>
         <tr>
+            <th>Select</th>
             <th>Username</th>
             <th>Email</th>
             <th>Actions</th>
@@ -19,6 +26,9 @@
         @foreach (var user in Model)
         {
             <tr>
+                <td>
+                    <input type="checkbox" class="user-checkbox" value="@user.PublicId" />
+                </td>
                 <td>
                     <a href="@Url.Action("userDetail", "Home", new { userPublicId = user.PublicId })">
                         @user.Name
@@ -35,3 +45,12 @@
         }
     </tbody>
 </table>
+
+<script>
+function deleteSelectedUsers() {
+    const checkboxes = document.querySelectorAll('.user-checkbox:checked');
+    const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+    document.getElementById('selectedUserIds').value = selectedIds.join(',');
+    document.getElementById('deleteSelectedForm').submit();
+}
+</script>

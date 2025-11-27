@@ -118,6 +118,24 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             return RedirectToAction(nameof(Users));
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DeleteRangeUser(string selectedUserIds)
+        {
+            if (!string.IsNullOrEmpty(selectedUserIds))
+            {
+                var userIds = selectedUserIds.Split(',')
+                    .Where(id => Guid.TryParse(id, out _))
+                    .Select(Guid.Parse)
+                    .ToList();
+                
+                if (userIds.Any())
+                {
+                    await _userService.DeleteRangeAsync(userIds);
+                }
+            }
+            return RedirectToAction(nameof(Users));
+        }
+
         public async Task<IActionResult> Index()
         {
             var dtos = await _userService.GetAllAsync();

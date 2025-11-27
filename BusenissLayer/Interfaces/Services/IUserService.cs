@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common.DTO;
 
 namespace BusinessLayer.Interfaces.Services
 {
@@ -14,5 +15,6 @@ namespace BusinessLayer.Interfaces.Services
         Task<bool> CreateAsync(UserDTO model);
         Task<bool> UpdateAsync(UserDTO model);
         Task<bool> DeleteAsync(Guid publicId);
+        Task<bool> DeleteRangeAsync(List<Guid> userPublicIds);
     }
 }
