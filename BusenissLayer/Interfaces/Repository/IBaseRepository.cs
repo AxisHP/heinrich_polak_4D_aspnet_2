@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Interfaces.Repository
 {
-    public interface IBaseRepository<TEntity> where TEntity : class
+    public interface IBaseRepository<TEntity> where TEntity : UserApp.DataLayer.Entities.BaseEntity
     {
         Task<TEntity?> GetByIdAsync(int id);
         Task<TEntity?> GetByPublicIdAsync(Guid publicId);
