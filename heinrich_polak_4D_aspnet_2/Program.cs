@@ -34,20 +34,4 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-using (var db = new AppDbContext())
-{
-    db.Database.EnsureCreated();
-
-    var user = new UserEntity()
-    {
-        Email = "user1@gmail.com",
-        Name = "User 1",
-        PublicId = Guid.NewGuid()
-    };
-    db.Users.Add(user);
-    db.SaveChanges();
-}
-
-//Console.ReadKey();
-
 app.Run();
