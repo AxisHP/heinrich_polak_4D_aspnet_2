@@ -26,7 +26,12 @@ namespace BusinessLayer.Services
             {
                 PublicId = model.PublicId == Guid.Empty ? Guid.NewGuid() : model.PublicId,
                 Name = model.Name,
-                Email = model.Email
+                Email = model.Email,
+                LastName = model.LastName,
+                DateOfBirth = model.DateOfBirth,
+                PhoneNumber = model.PhoneNumber,
+                Address = model.Address,
+                Role = model.Role
             };
 
             await _userRepository.CreateAsync(userEntity);
@@ -80,7 +85,12 @@ namespace BusinessLayer.Services
                 {
                     PublicId = user.PublicId,
                     Name = user.Name,
-                    Email = user.Email
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    DateOfBirth = user.DateOfBirth,
+                    PhoneNumber = user.PhoneNumber,
+                    Address = user.Address,
+                    Role = user.Role
                 });
             }
 
@@ -97,7 +107,12 @@ namespace BusinessLayer.Services
             {
                 PublicId = userEntity.PublicId,
                 Name = userEntity.Name,
-                Email = userEntity.Email
+                LastName = userEntity.LastName,
+                Email = userEntity.Email,
+                DateOfBirth = userEntity.DateOfBirth,
+                PhoneNumber = userEntity.PhoneNumber,
+                Address = userEntity.Address,
+                Role = userEntity.Role
             };
         }
 

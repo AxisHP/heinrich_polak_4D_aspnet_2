@@ -29,7 +29,12 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             {
                 PublicId = d.PublicId,
                 Name = d.Name,
-                Email = d.Email
+                LastName = d.LastName,
+                Email = d.Email,
+                DateOfBirth = d.DateOfBirth,
+                PhoneNumber = d.PhoneNumber,
+                Address = d.Address,
+                Role = d.Role
             }).ToList();
 
             return View(entities);
@@ -44,7 +49,12 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             {
                 PublicId = dto.PublicId,
                 Name = dto.Name,
-                Email = dto.Email
+                LastName = dto.LastName,
+                Email = dto.Email,
+                DateOfBirth = dto.DateOfBirth,
+                PhoneNumber = dto.PhoneNumber,
+                Address = dto.Address,
+                Role = dto.Role
             };
 
             return View(entity);
@@ -67,8 +77,12 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
         {
             var dto = new UserDTO
             {
-                Name = user.Username,
+                Name = user.Name,
+                LastName = user.LastName,
                 Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Address = user.Address,
+                Role = user.Role,
                 PublicId = Guid.NewGuid()
             };
 
@@ -96,8 +110,13 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             var dto = new UserDTO
             {
                 PublicId = updateModel.UserPublicId,
-                Name = currentUser.Name, // Preserve existing name
-                Email = updateModel.Email
+                Name = currentUser.Name,
+                LastName = currentUser.LastName,
+                Email = updateModel.Email,
+                DateOfBirth = currentUser.DateOfBirth,
+                PhoneNumber = currentUser.PhoneNumber,
+                Address = currentUser.Address,
+                Role = currentUser.Role
             };
 
             await _userService.UpdateAsync(dto);
@@ -143,7 +162,12 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             {
                 PublicId = d.PublicId,
                 Name = d.Name,
-                Email = d.Email
+                LastName = d.LastName,
+                Email = d.Email,
+                DateOfBirth = d.DateOfBirth,
+                PhoneNumber = d.PhoneNumber,
+                Address = d.Address,
+                Role = d.Role
             }).ToList();
 
             return View(entities);
