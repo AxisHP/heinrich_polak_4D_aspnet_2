@@ -91,32 +91,41 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
         }
 
         [HttpGet]
-        public IActionResult UpdateUser(Guid PublicId)
+        public async Task<IActionResult> UpdateUser(Guid PublicId)
         {
-            var model = new UpdateUserModel { UserPublicId = PublicId };
+            var dto = await _userService.GetByPublicIdAsync(PublicId);
+            if (dto == null)
+            {
+                return NotFound();
+            }
+
+            var model = new UpdateUserModel
+            {
+                UserPublicId = PublicId,
+                Name = dto.Name,
+                LastName = dto.LastName,
+                Email = dto.Email,
+                DateOfBirth = dto.DateOfBirth,
+                PhoneNumber = dto.PhoneNumber,
+                Address = dto.Address,
+                Role = dto.Role
+            };
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateUser(UpdateUserModel updateModel)
         {
-            // Get the current user data to preserve the Name field
-            var currentUser = await _userService.GetByPublicIdAsync(updateModel.UserPublicId);
-            if (currentUser == null)
-            {
-                return NotFound();
-            }
-
             var dto = new UserDTO
             {
                 PublicId = updateModel.UserPublicId,
-                Name = currentUser.Name,
-                LastName = currentUser.LastName,
+                Name = updateModel.Name,
+                LastName = updateModel.LastName,
                 Email = updateModel.Email,
-                DateOfBirth = currentUser.DateOfBirth,
-                PhoneNumber = currentUser.PhoneNumber,
-                Address = currentUser.Address,
-                Role = currentUser.Role
+                DateOfBirth = updateModel.DateOfBirth,
+                PhoneNumber = updateModel.PhoneNumber,
+                Address = updateModel.Address,
+                Role = updateModel.Role
             };
 
             await _userService.UpdateAsync(dto);
