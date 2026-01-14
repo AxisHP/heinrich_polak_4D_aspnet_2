@@ -24,18 +24,39 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Users">Users</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="CreateUser">Register</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
-                        </li>
+                        @{
+                            var userRole = Context.Session.GetString("UserRole");
+                            if (userRole == "Admin")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Users">Users</a>
+                                </li>
+                            }
+                        }
+                        @{
+                            var userEmail = Context.Session.GetString("UserEmail");
+                            var userName = Context.Session.GetString("UserName");
+                            if (string.IsNullOrEmpty(userEmail))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="CreateUser">Register</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <span class="nav-link text-dark">@userName</span>
+                                </li>
+                                <li class="nav-item">
+                                    <form asp-action="Logout" method="post">
+                                        <button type="submit" class="btn nav-link text-dark">Logout</button>
+                                    </form>
+                                </li>
+                            }
+                        }
                     </ul>
                 </div>
             </div>

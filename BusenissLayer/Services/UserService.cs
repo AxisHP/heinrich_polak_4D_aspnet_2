@@ -31,7 +31,8 @@ namespace BusinessLayer.Services
                 DateOfBirth = model.DateOfBirth,
                 PhoneNumber = model.PhoneNumber,
                 Address = model.Address,
-                Role = model.Role
+                Role = model.Role,
+                PasswordHash = model.Password
             };
 
             await _userRepository.CreateAsync(userEntity);
@@ -123,10 +124,52 @@ namespace BusinessLayer.Services
             
             userEntity.Name = model.Name;
             userEntity.Email = model.Email;
+            userEntity.LastName = model.LastName;
+            userEntity.DateOfBirth = model.DateOfBirth;
+            userEntity.PhoneNumber = model.PhoneNumber;
+            userEntity.Address = model.Address;
+            userEntity.Role = model.Role;
+            
             _userRepository.Update(userEntity);
             await _userRepository.SaveChangesAsync();
             
             return true;
+        }
+
+        public async Task<bool> ResetPasswordAsync(Guid userPublicId, string newPassword)
+        {
+            var userEntity = await _userRepository.GetByPublicIdAsync(userPublicId);
+            if (userEntity == null) return false;
+
+            userEntity.PasswordHash = newPassword;
+            _userRepository.Update(userEntity);
+            await _userRepository.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<UserDTO> AuthenticateAsync(string email, string password)
+        {
+            var userList = await _userRepository.GetAllAsync();
+            var userEntity = userList.FirstOrDefault(u => u.Email == email);
+
+            if (userEntity == null)
+                return null;
+
+            if (userEntity.PasswordHash != password)
+                return null;
+
+            return new UserDTO
+            {
+                PublicId = userEntity.PublicId,
+                Name = userEntity.Name,
+                LastName = userEntity.LastName,
+                Email = userEntity.Email,
+                DateOfBirth = userEntity.DateOfBirth,
+                PhoneNumber = userEntity.PhoneNumber,
+                Address = userEntity.Address,
+                Role = userEntity.Role
+            };
         }
     }
 }

@@ -6,6 +6,7 @@ using UserApp.DataLayer.Entities;
 using BusinessLayer.Services;
 using BusinessLayer.Interfaces.Services;
 using Common.DTO;
+using Common.Enums;
 
 namespace heinrich_polak_4D_aspnet_2.Controllers
 {
@@ -20,6 +21,47 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             _logger = logger;
             _context = context;
             _userService = userService;
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View(new LoginModel());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginModel model)
+        {
+            var user = await _userService.AuthenticateAsync(model.Email, model.Password);
+            if (user != null)
+            {
+                HttpContext.Session.SetString("UserEmail", user.Email);
+                HttpContext.Session.SetString("UserName", user.Name);
+                HttpContext.Session.SetString("UserRole", user.Role.ToString());
+                HttpContext.Session.SetString("UserPublicId", user.PublicId.ToString());
+                return RedirectToAction(nameof(Index));
+            }
+
+            ModelState.AddModelError("", "Invalid email or password");
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool IsUserAdmin()
+        {
+            var roleString = HttpContext.Session.GetString("UserRole");
+            return roleString == UserRole.Admin.ToString();
+        }
+
+        private bool IsUserLoggedIn()
+        {
+            return !string.IsNullOrEmpty(HttpContext.Session.GetString("UserEmail"));
         }
 
         public async Task<IActionResult> UserList()
@@ -62,6 +104,11 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
 
         public async Task<IActionResult> Users()
         {
+            if (!IsUserLoggedIn() || !IsUserAdmin())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             var dtos = await _userService.GetAllAsync();
             return View(dtos);
         }
@@ -83,16 +130,22 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
                 PhoneNumber = user.PhoneNumber,
                 Address = user.Address,
                 Role = user.Role,
+                Password = user.Password,
                 PublicId = Guid.NewGuid()
             };
 
             await _userService.CreateAsync(dto);
-            return RedirectToAction(nameof(Users));
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
         public async Task<IActionResult> UpdateUser(Guid PublicId)
         {
+            if (!IsUserLoggedIn() || !IsUserAdmin())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             var dto = await _userService.GetByPublicIdAsync(PublicId);
             if (dto == null)
             {
@@ -116,6 +169,11 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateUser(UpdateUserModel updateModel)
         {
+            if (!IsUserLoggedIn() || !IsUserAdmin())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             var dto = new UserDTO
             {
                 PublicId = updateModel.UserPublicId,
@@ -135,6 +193,11 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
         [HttpGet]
         public IActionResult DeleteUser(Guid PublicId)
         {
+            if (!IsUserLoggedIn() || !IsUserAdmin())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             var model = new DeleteUserModel { UserPublicId = PublicId };
             return View(model);
         }
@@ -142,6 +205,11 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteUser(DeleteUserModel deleteModel)
         {
+            if (!IsUserLoggedIn() || !IsUserAdmin())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             await _userService.DeleteAsync(deleteModel.UserPublicId);
             return RedirectToAction(nameof(Users));
         }
@@ -149,6 +217,11 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteRangeUser(string selectedUserIds)
         {
+            if (!IsUserLoggedIn() || !IsUserAdmin())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             if (!string.IsNullOrEmpty(selectedUserIds))
             {
                 var userIds = selectedUserIds.Split(',')
@@ -161,6 +234,30 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
                     await _userService.DeleteRangeAsync(userIds);
                 }
             }
+            return RedirectToAction(nameof(Users));
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(Guid PublicId)
+        {
+            if (!IsUserLoggedIn() || !IsUserAdmin())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var model = new ResetPasswordModel { UserPublicId = PublicId };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordModel resetModel)
+        {
+            if (!IsUserLoggedIn() || !IsUserAdmin())
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            await _userService.ResetPasswordAsync(resetModel.UserPublicId, resetModel.NewPassword);
             return RedirectToAction(nameof(Users));
         }
 

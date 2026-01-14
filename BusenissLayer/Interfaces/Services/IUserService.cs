@@ -16,5 +16,7 @@ namespace BusinessLayer.Interfaces.Services
         Task<bool> UpdateAsync(UserDTO model);
         Task<bool> DeleteAsync(Guid publicId);
         Task<bool> DeleteRangeAsync(List<Guid> userPublicIds);
+        Task<bool> ResetPasswordAsync(Guid userPublicId, string newPassword);
+        Task<UserDTO> AuthenticateAsync(string email, string password);
     }
 }
