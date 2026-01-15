@@ -13,7 +13,13 @@ namespace UserApp.DataLayer
         public DbSet<OrderItem> OrderItems { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=app.db");
+            if (!optionsBuilder.IsConfigured)
+            {
+                var basePath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, @"..\..\..\..\UserApp.DataLayer"));
+                var dbPath = Path.Combine(basePath, "app_database.db");
+
+                optionsBuilder.UseSqlite($"Data Source={dbPath}");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
