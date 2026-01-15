@@ -122,11 +122,17 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(CreateUserModel user)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(user);
+            }
+
             var dto = new UserDTO
             {
                 Name = user.Name,
                 LastName = user.LastName,
                 Email = user.Email,
+                DateOfBirth = user.DateOfBirth,
                 PhoneNumber = user.PhoneNumber,
                 Address = user.Address,
                 Role = user.Role,
