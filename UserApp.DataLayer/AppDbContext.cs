@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UserApp.DataLayer.Entities;
+using Common.Enums;
 
 namespace UserApp.DataLayer
 {
@@ -88,6 +89,43 @@ namespace UserApp.DataLayer
 
             modelBuilder.Entity<CategoryEntity>()
                 .HasIndex(c => c.PublicId);
+        }
+
+        public void SeedData()
+        {
+            if (Users.Any()) return;
+
+            var adminPublicId = Guid.NewGuid();
+            var customerPublicId = Guid.NewGuid();
+
+            var adminUser = new UserEntity
+            {
+                PublicId = adminPublicId,
+                Name = "admin",
+                LastName = "user",
+                Email = "admin@test.com",
+                DateOfBirth = new DateOnly(2000, 1, 1),
+                PhoneNumber = "1234567890",
+                Address = "Stavbarska 36",
+                Role = UserRole.Admin,
+                PasswordHash = "admin123"
+            };
+
+            var customerUser = new UserEntity
+            {
+                PublicId = customerPublicId,
+                Name = "customer",
+                LastName = "user",
+                Email = "customer@test.com",
+                DateOfBirth = new DateOnly(2000, 1, 1),
+                PhoneNumber = "0987654321",
+                Address = "Stavbarska 38",
+                Role = UserRole.Customer,
+                PasswordHash = "customer123"
+            };
+
+            Users.AddRange(adminUser, customerUser);
+            SaveChanges();
         }
     }
 }
