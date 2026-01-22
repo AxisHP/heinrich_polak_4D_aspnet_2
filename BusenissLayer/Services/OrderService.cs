@@ -62,6 +62,15 @@ namespace BusinessLayer.Services
             var cartItems = await _cartRepository.GetByUserAsync(userPublicId);
             if (cartItems == null || !cartItems.Any()) return false;
 
+            foreach (var cartItem in cartItems)
+            {
+                var item = await _itemRepository.GetByPublicIdAsync(cartItem.ItemPublicId);
+                if (item == null || item.StockQuantity < cartItem.Quantity)
+                {
+                    return false;
+                }
+            }
+
             var order = new OrderEntity
             {
                 PublicId = Guid.NewGuid(),

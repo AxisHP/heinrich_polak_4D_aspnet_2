@@ -210,7 +210,17 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             if (!userId.HasValue)
                 return RedirectToAction("Login", "Home");
 
-            await _cartService.AddAsync(userId.Value, itemPublicId, quantity);
+            var result = await _cartService.AddAsync(userId.Value, itemPublicId, quantity);
+            
+            if (!result.Success)
+            {
+                TempData["ErrorMessage"] = result.ErrorMessage;
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Item added to cart successfully!";
+            }
+            
             return RedirectToAction(nameof(Details), new { publicId = itemPublicId });
         }
     }

@@ -140,7 +140,12 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
                 PublicId = Guid.NewGuid()
             };
 
-            await _userService.CreateAsync(dto);
+            var result = await _userService.CreateAsync(dto);
+            if (!result)
+            {
+                ModelState.AddModelError("Email", "User with this email already exists");
+                return View(user);
+            }
             
             HttpContext.Session.SetString("UserEmail", dto.Email);
             HttpContext.Session.SetString("UserName", dto.Name);

@@ -58,7 +58,17 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             if (!userId.HasValue)
                 return RedirectToAction("Login", "Home");
 
-            await _cartService.AddAsync(userId.Value, model.ItemPublicId, model.Quantity);
+            var result = await _cartService.AddAsync(userId.Value, model.ItemPublicId, model.Quantity);
+            
+            if (!result.Success)
+            {
+                TempData["ErrorMessage"] = result.ErrorMessage;
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Item added to cart successfully!";
+            }
+            
             return RedirectToAction(nameof(Index));
         }
 
@@ -69,7 +79,17 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             if (!userId.HasValue)
                 return RedirectToAction("Login", "Home");
 
-            await _cartService.UpdateQuantityAsync(userId.Value, model.ItemPublicId, model.Quantity);
+            var result = await _cartService.UpdateQuantityAsync(userId.Value, model.ItemPublicId, model.Quantity);
+            
+            if (!result.Success)
+            {
+                TempData["ErrorMessage"] = result.ErrorMessage;
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Cart updated successfully!";
+            }
+            
             return RedirectToAction(nameof(Index));
         }
 
@@ -106,6 +126,7 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             if (result)
                 return RedirectToAction("Index", "Order");
 
+            TempData["ErrorMessage"] = "Cannot complete checkout. Some items may be out of stock or have insufficient quantity.";
             return RedirectToAction(nameof(Index));
         }
     }

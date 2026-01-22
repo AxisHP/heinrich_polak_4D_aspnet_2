@@ -22,6 +22,12 @@ namespace BusinessLayer.Services
 
         public async Task<bool> CreateAsync(UserDTO model)
         {
+            var existingUser = await _userRepository.GetByEmailAsync(model.Email);
+            if (existingUser != null)
+            {
+                return false;
+            }
+
             var userEntity = new UserApp.DataLayer.Entities.UserEntity
             {
                 PublicId = model.PublicId == Guid.Empty ? Guid.NewGuid() : model.PublicId,
