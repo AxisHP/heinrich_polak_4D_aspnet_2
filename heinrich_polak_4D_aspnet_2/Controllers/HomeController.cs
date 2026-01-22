@@ -141,6 +141,12 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             };
 
             await _userService.CreateAsync(dto);
+            
+            HttpContext.Session.SetString("UserEmail", dto.Email);
+            HttpContext.Session.SetString("UserName", dto.Name);
+            HttpContext.Session.SetString("UserRole", dto.Role.ToString());
+            HttpContext.Session.SetString("UserPublicId", dto.PublicId.ToString());
+            
             return RedirectToAction(nameof(Index));
         }
 
@@ -232,7 +238,7 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             {
                 await _userService.DeleteRangeAsync(selectedUserIds);
             }
-                
+            
             return RedirectToAction(nameof(Users));
         }
 
