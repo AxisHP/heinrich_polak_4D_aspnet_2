@@ -5,15 +5,11 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-
-    <h2>Users List</h2>
+    <h1 class="display-4">Users list</h1>
     <ul>
         @foreach (var user in Model)
         {
             <partial name="_UserCard" model="user" />
-            @* <li>@user.Id - @user.Name - @user.Email</li> *@
         }
     </ul>
 </div>

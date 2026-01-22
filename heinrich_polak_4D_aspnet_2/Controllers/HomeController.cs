@@ -221,25 +221,18 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteRangeUser(string selectedUserIds)
+        public async Task<IActionResult> DeleteRangeUser(List<Guid> selectedUserIds)
         {
             if (!IsUserLoggedIn() || !IsUserAdmin())
             {
                 return RedirectToAction(nameof(Index));
             }
 
-            if (!string.IsNullOrEmpty(selectedUserIds))
+            if (selectedUserIds != null && selectedUserIds.Any())
             {
-                var userIds = selectedUserIds.Split(',')
-                    .Where(id => Guid.TryParse(id, out _))
-                    .Select(Guid.Parse)
-                    .ToList();
-                
-                if (userIds.Any())
-                {
-                    await _userService.DeleteRangeAsync(userIds);
-                }
+                await _userService.DeleteRangeAsync(selectedUserIds);
             }
+                
             return RedirectToAction(nameof(Users));
         }
 

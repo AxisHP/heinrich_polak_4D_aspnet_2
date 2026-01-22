@@ -4,115 +4,61 @@
 	ViewData["Title"] = "Create User";
 }
 
-<form asp-controller="Home" asp-action="CreateUser" method="post">
-	<div class="form-group">
-		<label asp-for="Name"></label>
-		<input asp-for="Name" class="form-control" />
-		<span asp-validation-for="Name" class="text-danger"></span>
-	</div>
-    <div class="form-group">
-        <label asp-for="LastName"></label>
-        <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4">Create User</h2>
+                    <form asp-controller="Home" asp-action="CreateUser" method="post">
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="LastName" class="form-label"></label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="DateOfBirth" class="form-label"></label>
+                            <input asp-for="DateOfBirth" class="form-control" />
+                            <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="PhoneNumber" class="form-label"></label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Address" class="form-label"></label>
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Role" class="form-label"></label>
+                            <select asp-for="Role" class="form-select">
+                                <option value="">Select Role</option>
+                                <option value="Admin">Admin</option>
+                                <option value="Customer">Customer</option>
+                            </select>
+                            <span asp-validation-for="Role" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" type="password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Create</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-	<div class="form-group">
-		<label asp-for="Email"></label>
-		<input asp-for="Email" class="form-control" />
-		<span asp-validation-for="Email" class="text-danger"></span>
-	</div>
-    <div class="form-group">
-        <label asp-for="DateOfBirth"></label>
-        <input asp-for="DateOfBirth" class="form-control" />
-        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="PhoneNumber"></label>
-        <input asp-for="PhoneNumber" class="form-control" />
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Address"></label>
-        <input asp-for="Address" class="form-control" />
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Role"></label>
-        <select asp-for="Role" class="form-control">
-            <option value="">Select Role</option>
-            <option value="Admin">Admin</option>
-            <option value="User">User</option>
-        </select>
-        <span asp-validation-for="Role" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Create</button>
-</form>
-
-<style>
-    form {
-        max-width: 400px;
-        margin: 40px auto;
-        padding: 30px;
-        background: #f0f4f8;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        color: #333;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-        color: #4a6edb;
-    }
-
-    input.form-control {
-        width: 100%;
-        padding: 10px;
-        font-size: 1rem;
-        border: 2px solid #cfd8dc;
-        border-radius: 6px;
-        background-color: #ffffff;
-        color: #333;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-        input.form-control:focus {
-            border-color: #90caf9;
-            box-shadow: 0 0 8px rgba(144, 202, 249, 0.5);
-            outline: none;
-        }
-
-    .text-danger {
-        color: #e57373;
-        font-size: 0.9rem;
-        margin-top: 4px;
-    }
-
-    button.btn-primary {
-        width: 100%;
-        padding: 12px;
-        font-size: 1.1rem;
-        background-color: #0d6efd;
-        border: none;
-        border-radius: 8px;
-        color: #fff;
-        font-weight: 700;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-        button.btn-primary:hover {
-            background-color: #3b54a4;
-        }
-
-</style>
+</div>
