@@ -47,7 +47,7 @@ namespace BusinessLayer.Services
                 return CartOperationResult.FailureResult("Quantity must be greater than 0.");
             
             if (quantity > 1000)
-                return CartOperationResult.FailureResult("Cannot add more than 1000 items of a single product. Maximum allowed quantity is 1000.");
+                return CartOperationResult.FailureResult("Cannot add more than 1000 items. Maximum allowed quantity is 1000.");
 
             var item = await _itemRepository.GetByPublicIdAsync(itemPublicId);
             if (item == null)
@@ -60,19 +60,13 @@ namespace BusinessLayer.Services
                 var newQuantity = existing.Quantity + quantity;
                 
                 if (newQuantity > 1000)
-                    return CartOperationResult.FailureResult($"Cannot add {quantity} items. You already have {existing.Quantity} in cart. Maximum allowed quantity per item is 1000.");
-                
-                if (newQuantity > item.StockQuantity)
-                    return CartOperationResult.FailureResult($"Insufficient stock. Only {item.StockQuantity} items available, but you're trying to add {newQuantity} total.");
+                    return CartOperationResult.FailureResult($"Cannot add {quantity} items. You already have {existing.Quantity} in cart. Maximum allowed is 1000.");
                 
                 existing.Quantity = newQuantity;
                 _cartRepository.Update(existing);
             }
             else
             {
-                if (quantity > item.StockQuantity)
-                    return CartOperationResult.FailureResult($"Insufficient stock. Only {item.StockQuantity} items available.");
-                
                 var entity = new CartItemEntity
                 {
                     PublicId = Guid.NewGuid(),
