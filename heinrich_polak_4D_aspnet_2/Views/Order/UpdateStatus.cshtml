@@ -1,0 +1,23 @@
+@model UpdateOrderStatusModel
+
+@{
+    ViewData["Title"] = "Update Order Status";
+}
+
+<h1>Update Order Status</h1>
+
+<form asp-action="UpdateStatus" method="post">
+    <input type="hidden" asp-for="PublicId" />
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label">Status</label>
+        <select asp-for="Status" class="form-select">
+            <option value="@Common.Enums.OrderStatus.Payed">Payed</option>
+            <option value="@Common.Enums.OrderStatus.GettingReady">Getting Ready</option>
+            <option value="@Common.Enums.OrderStatus.Delivering">Delivering</option>
+            <option value="@Common.Enums.OrderStatus.Delivered">Delivered</option>
+            <option value="@Common.Enums.OrderStatus.Canceled">Canceled</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

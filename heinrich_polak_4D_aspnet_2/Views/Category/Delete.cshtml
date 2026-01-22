@@ -1,0 +1,15 @@
+@model DeleteCategoryModel
+
+@{
+    ViewData["Title"] = "Delete Category";
+}
+
+<h1>Delete Category</h1>
+
+<p>Are you sure you want to delete the category <strong>@Model.Name</strong>?</p>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" name="publicId" value="@Model.PublicId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

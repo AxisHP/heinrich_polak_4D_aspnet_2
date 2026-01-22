@@ -11,6 +11,9 @@ namespace UserApp.DataLayer
         public DbSet<CategoryEntity> Categories { get; set; }
         public DbSet<OrderEntity> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<FavoriteEntity> Favorites { get; set; }
+        public DbSet<CartItemEntity> CartItems { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -27,13 +30,64 @@ namespace UserApp.DataLayer
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<UserEntity>()
-                .HasIndex(u => u.Id);
+                .HasIndex(u => u.PublicId);
 
             modelBuilder.Entity<ItemEntity>()
-                .HasIndex(i => i.Id);
-            
+                .HasIndex(i => i.PublicId);
+
+            modelBuilder.Entity<ItemEntity>()
+                .HasOne(i => i.Category)
+                .WithMany(c => c.Items)
+                .HasForeignKey(i => i.CategoryId)
+                .HasPrincipalKey(c => c.PublicId);
+
             modelBuilder.Entity<OrderEntity>()
-                .HasIndex(o => o.Id);
+                .HasIndex(o => o.PublicId);
+
+            modelBuilder.Entity<OrderEntity>()
+                .HasOne(o => o.User)
+                .WithMany()
+                .HasForeignKey(o => o.UserPublicId)
+                .HasPrincipalKey(u => u.PublicId);
+
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.Order)
+                .WithMany(o => o.Items)
+                .HasForeignKey(oi => oi.OrderPublicId)
+                .HasPrincipalKey(o => o.PublicId);
+
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.Item)
+                .WithMany()
+                .HasForeignKey(oi => oi.ItemPublicId)
+                .HasPrincipalKey(i => i.PublicId);
+
+            modelBuilder.Entity<FavoriteEntity>()
+                .HasOne(f => f.User)
+                .WithMany()
+                .HasForeignKey(f => f.UserPublicId)
+                .HasPrincipalKey(u => u.PublicId);
+
+            modelBuilder.Entity<FavoriteEntity>()
+                .HasOne(f => f.Item)
+                .WithMany()
+                .HasForeignKey(f => f.ItemPublicId)
+                .HasPrincipalKey(i => i.PublicId);
+
+            modelBuilder.Entity<CartItemEntity>()
+                .HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserPublicId)
+                .HasPrincipalKey(u => u.PublicId);
+
+            modelBuilder.Entity<CartItemEntity>()
+                .HasOne(c => c.Item)
+                .WithMany()
+                .HasForeignKey(c => c.ItemPublicId)
+                .HasPrincipalKey(i => i.PublicId);
+
+            modelBuilder.Entity<CategoryEntity>()
+                .HasIndex(c => c.PublicId);
         }
     }
 }

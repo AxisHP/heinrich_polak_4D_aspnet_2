@@ -1,0 +1,65 @@
+@model List<Common.DTO.ItemDTO>
+
+@{
+    ViewData["Title"] = "Items";
+    var categories = ViewBag.Categories as List<Common.DTO.CategoryDTO>;
+    var selectedCategoryId = ViewBag.SelectedCategoryId as Guid?;
+    var userRole = Context.Session.GetString("UserRole");
+    var isAdmin = userRole == "Admin";
+}
+
+<h1>Items</h1>
+
+<div class="mb-3">
+    <form method="get" class="d-flex gap-2">
+        <select name="categoryId" class="form-select" style="max-width: 300px;">
+            <option value="">All Categories</option>
+            @if (categories != null)
+            {
+                foreach (var cat in categories)
+                {
+                    <option value="@cat.PublicId" selected="@(selectedCategoryId == cat.PublicId)">@cat.Name</option>
+                }
+            }
+        </select>
+        <button type="submit" class="btn btn-secondary">Filter</button>
+    </form>
+</div>
+
+@if (isAdmin)
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New Item</a>
+    </p>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Price.ToString("C")</td>
+                <td>@item.StockQuantity</td>
+                <td>@item.CategoryName</td>
+                <td>
+                    <a asp-action="Details" asp-route-publicId="@item.PublicId" class="btn btn-sm btn-info">Details</a>
+                    @if (isAdmin)
+                    {
+                        <a asp-action="Edit" asp-route-publicId="@item.PublicId" class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-publicId="@item.PublicId" class="btn btn-sm btn-danger">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

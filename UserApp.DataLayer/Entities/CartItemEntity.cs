@@ -2,13 +2,12 @@ using System;
 
 namespace UserApp.DataLayer.Entities
 {
-    public class OrderItem : BaseEntity
+    public class CartItemEntity : BaseEntity
     {
-        public Guid OrderPublicId { get; set; }
-        public OrderEntity Order { get; set; }
+        public Guid UserPublicId { get; set; }
+        public UserEntity User { get; set; }
         public Guid ItemPublicId { get; set; }
         public ItemEntity Item { get; set; }
         public int Quantity { get; set; }
-        public decimal Price { get; set; }
     }
 }
