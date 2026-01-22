@@ -5,11 +5,11 @@ using Common.DTO;
 
 namespace BusinessLayer.Interfaces.Services
 {
-    public interface IFavoriteService
+    public interface IFavouriteService
     {
-        Task<List<FavoriteDTO>> GetByUserAsync(Guid userPublicId);
+        Task<List<FavouriteDTO>> GetByUserAsync(Guid userPublicId);
         Task<bool> AddAsync(Guid userPublicId, Guid itemPublicId);
         Task<bool> RemoveAsync(Guid userPublicId, Guid itemPublicId);
-        Task<bool> IsItemFavoriteAsync(Guid userPublicId, Guid itemPublicId);
+        Task<bool> IsItemFavouriteAsync(Guid userPublicId, Guid itemPublicId);
     }
 }

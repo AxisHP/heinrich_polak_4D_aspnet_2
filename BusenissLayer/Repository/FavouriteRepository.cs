@@ -9,26 +9,26 @@ using UserApp.DataLayer.Entities;
 
 namespace BusinessLayer.Repository
 {
-    public class FavoriteRepository : BaseRepository<FavoriteEntity>, IFavoriteRepository
+    public class FavouriteRepository : BaseRepository<FavouriteEntity>, IFavouriteRepository
     {
         private readonly AppDbContext _context;
 
-        public FavoriteRepository(AppDbContext context) : base(context)
+        public FavouriteRepository(AppDbContext context) : base(context)
         {
             _context = context;
         }
 
-        public async Task<List<FavoriteEntity>> GetByUserAsync(Guid userPublicId)
+        public async Task<List<FavouriteEntity>> GetByUserAsync(Guid userPublicId)
         {
-            return await _context.Favorites
+            return await _context.Favourites
                 .Include(f => f.Item)
                 .Where(f => f.UserPublicId == userPublicId)
                 .ToListAsync();
         }
 
-        public async Task<FavoriteEntity> GetByUserAndItemAsync(Guid userPublicId, Guid itemPublicId)
+        public async Task<FavouriteEntity> GetByUserAndItemAsync(Guid userPublicId, Guid itemPublicId)
         {
-            return await _context.Favorites
+            return await _context.Favourites
                 .FirstOrDefaultAsync(f => f.UserPublicId == userPublicId && f.ItemPublicId == itemPublicId);
         }
     }

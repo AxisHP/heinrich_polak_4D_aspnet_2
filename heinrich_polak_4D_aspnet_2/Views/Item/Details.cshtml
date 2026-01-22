@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Item Details";
-    var isFavorite = ViewBag.IsFavorite as bool? ?? false;
+    var isFavourite = ViewBag.IsFavourite as bool? ?? false;
     var isLoggedIn = !string.IsNullOrEmpty(Context.Session.GetString("UserEmail"));
 }
 
@@ -24,18 +24,18 @@
                     <button type="submit" class="btn btn-success">Add to Cart</button>
                 </form>
 
-                @if (isFavorite)
+                @if (isFavourite)
                 {
-                    <form asp-action="RemoveFromFavorites" method="post" class="d-inline">
+                    <form asp-action="RemoveFromFavourites" method="post" class="d-inline">
                         <input type="hidden" name="itemPublicId" value="@Model.PublicId" />
-                        <button type="submit" class="btn btn-outline-danger">Remove from Favorites</button>
+                        <button type="submit" class="btn btn-outline-danger">Remove from Favourites</button>
                     </form>
                 }
                 else
                 {
-                    <form asp-action="AddToFavorites" method="post" class="d-inline">
+                    <form asp-action="AddToFavourites" method="post" class="d-inline">
                         <input type="hidden" name="itemPublicId" value="@Model.PublicId" />
-                        <button type="submit" class="btn btn-outline-primary">Add to Favorites</button>
+                        <button type="submit" class="btn btn-outline-primary">Add to Favourites</button>
                     </form>
                 }
             </div>

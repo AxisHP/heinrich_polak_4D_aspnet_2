@@ -13,15 +13,15 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
     {
         private readonly IItemService _itemService;
         private readonly ICategoryService _categoryService;
-        private readonly IFavoriteService _favoriteService;
+        private readonly IFavouriteService _favouriteService;
         private readonly ICartService _cartService;
 
         public ItemController(IItemService itemService, ICategoryService categoryService, 
-            IFavoriteService favoriteService, ICartService cartService)
+            IFavouriteService favouriteService, ICartService cartService)
         {
             _itemService = itemService;
             _categoryService = categoryService;
-            _favoriteService = favoriteService;
+            _favouriteService = favouriteService;
             _cartService = cartService;
         }
 
@@ -63,7 +63,7 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             var userId = GetCurrentUserPublicId();
             if (userId.HasValue)
             {
-                ViewBag.IsFavorite = await _favoriteService.IsItemFavoriteAsync(userId.Value, publicId);
+                ViewBag.IsFavourite = await _favouriteService.IsItemFavouriteAsync(userId.Value, publicId);
             }
 
             return View(item);
@@ -182,24 +182,24 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddToFavorites(Guid itemPublicId)
+        public async Task<IActionResult> AddToFavourites(Guid itemPublicId)
         {
             var userId = GetCurrentUserPublicId();
             if (!userId.HasValue)
                 return RedirectToAction("Login", "Home");
 
-            await _favoriteService.AddAsync(userId.Value, itemPublicId);
+            await _favouriteService.AddAsync(userId.Value, itemPublicId);
             return RedirectToAction(nameof(Details), new { publicId = itemPublicId });
         }
 
         [HttpPost]
-        public async Task<IActionResult> RemoveFromFavorites(Guid itemPublicId)
+        public async Task<IActionResult> RemoveFromFavourites(Guid itemPublicId)
         {
             var userId = GetCurrentUserPublicId();
             if (!userId.HasValue)
                 return RedirectToAction("Login", "Home");
 
-            await _favoriteService.RemoveAsync(userId.Value, itemPublicId);
+            await _favouriteService.RemoveAsync(userId.Value, itemPublicId);
             return RedirectToAction(nameof(Details), new { publicId = itemPublicId });
         }
 

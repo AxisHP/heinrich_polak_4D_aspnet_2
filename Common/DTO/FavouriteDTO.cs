@@ -2,7 +2,7 @@ using System;
 
 namespace Common.DTO
 {
-    public class FavoriteDTO
+    public class FavouriteDTO
     {
         public Guid PublicId { get; set; }
         public Guid UserPublicId { get; set; }

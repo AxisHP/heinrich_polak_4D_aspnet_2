@@ -5,13 +5,13 @@ using BusinessLayer.Interfaces.Services;
 
 namespace heinrich_polak_4D_aspnet_2.Controllers
 {
-    public class FavoriteController : Controller
+    public class FavouriteController : Controller
     {
-        private readonly IFavoriteService _favoriteService;
+        private readonly IFavouriteService _favouriteService;
 
-        public FavoriteController(IFavoriteService favoriteService)
+        public FavouriteController(IFavouriteService favouriteService)
         {
-            _favoriteService = favoriteService;
+            _favouriteService = favouriteService;
         }
 
         private bool IsUserLoggedIn()
@@ -36,8 +36,8 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             if (!userId.HasValue)
                 return RedirectToAction("Login", "Home");
 
-            var favorites = await _favoriteService.GetByUserAsync(userId.Value);
-            return View(favorites);
+            var favourites = await _favouriteService.GetByUserAsync(userId.Value);
+            return View(favourites);
         }
 
         [HttpPost]
@@ -47,7 +47,7 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             if (!userId.HasValue)
                 return RedirectToAction("Login", "Home");
 
-            await _favoriteService.AddAsync(userId.Value, itemPublicId);
+            await _favouriteService.AddAsync(userId.Value, itemPublicId);
             return RedirectToAction(nameof(Index));
         }
 
@@ -58,7 +58,7 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
             if (!userId.HasValue)
                 return RedirectToAction("Login", "Home");
 
-            await _favoriteService.RemoveAsync(userId.Value, itemPublicId);
+            await _favouriteService.RemoveAsync(userId.Value, itemPublicId);
             return RedirectToAction(nameof(Index));
         }
     }

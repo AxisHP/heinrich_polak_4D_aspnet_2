@@ -1,10 +1,10 @@
-@model List<Common.DTO.FavoriteDTO>
+@model List<Common.DTO.FavouriteDTO>
 
 @{
-    ViewData["Title"] = "Favorites";
+    ViewData["Title"] = "Favourites";
 }
 
-<h1>My Favorites</h1>
+<h1>My Favourites</h1>
 
 @if (Model.Any())
 {
@@ -42,6 +42,6 @@
 }
 else
 {
-    <p>You have no favorites yet.</p>
+    <p>You have no favourites yet.</p>
     <a asp-controller="Item" asp-action="Index" class="btn btn-primary">Browse Items</a>
 }

@@ -11,7 +11,7 @@ namespace UserApp.DataLayer
         public DbSet<CategoryEntity> Categories { get; set; }
         public DbSet<OrderEntity> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<FavoriteEntity> Favorites { get; set; }
+        public DbSet<FavouriteEntity> Favourites { get; set; }
         public DbSet<CartItemEntity> CartItems { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -62,13 +62,13 @@ namespace UserApp.DataLayer
                 .HasForeignKey(oi => oi.ItemPublicId)
                 .HasPrincipalKey(i => i.PublicId);
 
-            modelBuilder.Entity<FavoriteEntity>()
+            modelBuilder.Entity<FavouriteEntity>()
                 .HasOne(f => f.User)
                 .WithMany()
                 .HasForeignKey(f => f.UserPublicId)
                 .HasPrincipalKey(u => u.PublicId);
 
-            modelBuilder.Entity<FavoriteEntity>()
+            modelBuilder.Entity<FavouriteEntity>()
                 .HasOne(f => f.Item)
                 .WithMany()
                 .HasForeignKey(f => f.ItemPublicId)

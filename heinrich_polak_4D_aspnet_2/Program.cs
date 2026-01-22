@@ -14,14 +14,14 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IItemRepository, ItemRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
-builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+builder.Services.AddScoped<IFavouriteRepository, FavouriteRepository>();
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IItemService, ItemService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<IFavoriteService, FavoriteService>();
+builder.Services.AddScoped<IFavouriteService, FavouriteService>();
 builder.Services.AddScoped<ICartService, CartService>();
 
 builder.Services.AddSession(options =>
