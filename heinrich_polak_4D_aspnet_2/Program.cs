@@ -54,6 +54,7 @@ app.MapControllerRoute(
 using (var db = new AppDbContext())
 {
     db.Database.EnsureCreated();
+    db.SeedData();
 }
 
 app.Run();

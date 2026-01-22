@@ -135,7 +135,7 @@ namespace heinrich_polak_4D_aspnet_2.Controllers
                 DateOfBirth = user.DateOfBirth,
                 PhoneNumber = user.PhoneNumber,
                 Address = user.Address,
-                Role = user.Role,
+                Role = UserRole.Customer,
                 Password = user.Password,
                 PublicId = Guid.NewGuid()
             };

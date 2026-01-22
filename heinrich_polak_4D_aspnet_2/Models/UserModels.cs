@@ -25,9 +25,6 @@ namespace heinrich_polak_4D_aspnet_2.Models
         [Required(ErrorMessage = "Address is required")]
         public string Address { get; set; }
 
-        [Required(ErrorMessage = "Role is required")]
-        public Common.Enums.UserRole Role { get; set; }
-
         [Required(ErrorMessage = "Password is required")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "Password must be at least 6 characters")]
         public string Password { get; set; }
