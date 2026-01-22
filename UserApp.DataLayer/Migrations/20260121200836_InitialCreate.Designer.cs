@@ -11,8 +11,8 @@ using UserApp.DataLayer;
 namespace UserApp.DataLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260114180440_password")]
-    partial class password
+    [Migration("20260121200836_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,14 +46,38 @@ namespace UserApp.DataLayer.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("UserApp.DataLayer.Entities.CategoryEntity", b =>
+            modelBuilder.Entity("UserApp.DataLayer.Entities.CartItemEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("CategoryId")
+                    b.Property<Guid>("ItemPublicId")
                         .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PublicId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("UserPublicId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemPublicId");
+
+                    b.HasIndex("UserPublicId");
+
+                    b.ToTable("CartItems");
+                });
+
+            modelBuilder.Entity("UserApp.DataLayer.Entities.CategoryEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -68,7 +92,33 @@ namespace UserApp.DataLayer.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PublicId");
+
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("UserApp.DataLayer.Entities.FavoriteEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("ItemPublicId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PublicId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserPublicId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemPublicId");
+
+                    b.HasIndex("UserPublicId");
+
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("UserApp.DataLayer.Entities.ItemEntity", b =>
@@ -77,11 +127,11 @@ namespace UserApp.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ItemId")
+                    b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -99,7 +149,9 @@ namespace UserApp.DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id");
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("PublicId");
 
                     b.ToTable("Items");
                 });
@@ -113,9 +165,6 @@ namespace UserApp.DataLayer.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid>("PublicId")
                         .HasColumnType("TEXT");
 
@@ -125,12 +174,14 @@ namespace UserApp.DataLayer.Migrations
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("UserPublicId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id");
+                    b.HasIndex("PublicId");
+
+                    b.HasIndex("UserPublicId");
 
                     b.ToTable("Orders");
                 });
@@ -141,11 +192,11 @@ namespace UserApp.DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("ItemId")
+                    b.Property<Guid>("ItemPublicId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("OrderEntityId")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("OrderPublicId")
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
@@ -158,7 +209,9 @@ namespace UserApp.DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderEntityId");
+                    b.HasIndex("ItemPublicId");
+
+                    b.HasIndex("OrderPublicId");
 
                     b.ToTable("OrderItems");
                 });
@@ -173,7 +226,7 @@ namespace UserApp.DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DateOfBirth")
+                    b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -204,16 +257,101 @@ namespace UserApp.DataLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Id");
+                    b.HasIndex("PublicId");
 
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("UserApp.DataLayer.Entities.CartItemEntity", b =>
+                {
+                    b.HasOne("UserApp.DataLayer.Entities.ItemEntity", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemPublicId")
+                        .HasPrincipalKey("PublicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UserApp.DataLayer.Entities.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserPublicId")
+                        .HasPrincipalKey("PublicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("UserApp.DataLayer.Entities.FavoriteEntity", b =>
+                {
+                    b.HasOne("UserApp.DataLayer.Entities.ItemEntity", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemPublicId")
+                        .HasPrincipalKey("PublicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UserApp.DataLayer.Entities.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserPublicId")
+                        .HasPrincipalKey("PublicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("UserApp.DataLayer.Entities.ItemEntity", b =>
+                {
+                    b.HasOne("UserApp.DataLayer.Entities.CategoryEntity", "Category")
+                        .WithMany("Items")
+                        .HasForeignKey("CategoryId")
+                        .HasPrincipalKey("PublicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("UserApp.DataLayer.Entities.OrderEntity", b =>
+                {
+                    b.HasOne("UserApp.DataLayer.Entities.UserEntity", "User")
+                        .WithMany()
+                        .HasForeignKey("UserPublicId")
+                        .HasPrincipalKey("PublicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("UserApp.DataLayer.Entities.OrderItem", b =>
                 {
-                    b.HasOne("UserApp.DataLayer.Entities.OrderEntity", null)
+                    b.HasOne("UserApp.DataLayer.Entities.ItemEntity", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemPublicId")
+                        .HasPrincipalKey("PublicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UserApp.DataLayer.Entities.OrderEntity", "Order")
                         .WithMany("Items")
-                        .HasForeignKey("OrderEntityId");
+                        .HasForeignKey("OrderPublicId")
+                        .HasPrincipalKey("PublicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("UserApp.DataLayer.Entities.CategoryEntity", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("UserApp.DataLayer.Entities.OrderEntity", b =>
